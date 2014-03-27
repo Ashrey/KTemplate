@@ -6,9 +6,9 @@ class PrintGenerator extends Generators{
 
     function generate(){
         $token = $this->nextRequire(Token::T_STREAM, Token::T_IDENT);
-
         $str = $this->getPrint($token);
         $this->nl("echo $str ;\n");
+        $this->end();
     }
 
     function getStream($token){
