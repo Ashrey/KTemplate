@@ -34,6 +34,8 @@ class Tokenizer{
 					case ']':
 					case '.':
 					case ',':
+					case ':':
+
 						$this->pos++;
 						return new Token(ord($char), null);
 						break;

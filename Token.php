@@ -19,8 +19,9 @@ class Token{
     const T_ENDFOR     = 22;
     const T_IN         = 23;
 
-    const T_COMMA      = 44;
+    const T_COMMA      = 44;  /* , */
     const T_DOT        = 46;  /* . */
+    const T_DDOT       = 58;  /* : */
     const T_O_CORCH    = 91;  /* [ */
     const T_C_CORCH    = 93;  /* ] */
     const T_PIPE       = 124; /* | */
