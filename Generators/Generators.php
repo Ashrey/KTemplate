@@ -36,7 +36,7 @@ abstract class Generators{
      * @return Token
      */
     function nextRequire($val){
-        $token = $this->token();
+        $token = $this->next();
         if(!$token->is($val)){
             $this->exception('Expenting '. $val);
         }
