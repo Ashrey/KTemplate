@@ -1,0 +1,15 @@
+<h1>{{ title }} </h1>
+<ul>
+{% for i, j in people %}
+    <li> {{ i }} - {{ j['first_name']}}
+    </li>
+{% endfor %}
+</ul>
+
+{# Show list of dates #}
+{% for date in days %}
+    {% ifchanged %}<h3>{{ date|date:"F" }}</h3>{% endifchanged %}
+    <a href="{{ date|date:"M/d"|lower }}/">{{ date|date:"j" }}</a>
+{% endfor %}
+
+{% include templates.base %}
