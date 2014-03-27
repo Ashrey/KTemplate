@@ -67,6 +67,15 @@ abstract class Generators{
     }
 
     /**
+     * Return the next token if is 
+     * @return Token 
+     */
+    function nextIfIs(){
+        $token  =  $this->stack[0];
+        return $token->in(func_get_args()) ? $this->next() : null;
+    }
+
+    /**
      * Mark the end of sentence
      */
     function end(){
@@ -113,7 +122,7 @@ abstract class Generators{
             $token = $this->nextRequire(Token::T_IDENT);
             /*Tiene argumentos*/
             $arg = array();
-            if($this->hasToken() && $this->nextIs(Token::T_DDOT) && $this->next()){
+            if($this->hasToken() && $this->nextIfIs(Token::T_DDOT)){
                 $arg[] = $this->nextRequire(Token::T_IDENT, Token::T_NUMBER, Token::T_STRING)->getValue();
             }
             $filter = $this->getFilter($token->getValue());
