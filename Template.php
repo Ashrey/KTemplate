@@ -2,15 +2,17 @@
 namespace KTemplate;
 
 class Template{
-    protected static $config;
+    protected static $config = array(
+        'check_cache' => false,
+    );
 
     static function configure($c){
-        self::$config = $c;
+        self::$config = array_merge(self::$config, $c);
     }
 
     static function load($name, $var){
-        $tpl      = self::$config['template_dir']. "/$name";
-        $id = hash('sha256', $tpl);
+        $tpl = self::$config['template_dir']. "/$name";
+        $id  = hash('sha256', $tpl);
         $compile  = self::$config['cache_dir'] . "/$id.php";
         self::generate($tpl, $id, $var, $compile);
         include $compile;
@@ -19,7 +21,7 @@ class Template{
     }
 
     static function generate($file, $id, $var, $compile){
-        if (!is_file($compile) || (filemtime($file) > filemtime($compile))){
+        if (!is_file($compile) || !self::$config['check_cache'] || (filemtime($file) > filemtime($compile))){
             $parse  = new Parse($file, $var);
             $gen = new Generate($parse->getNodes(), $id, $var);
             $buffer = $gen->generate();
