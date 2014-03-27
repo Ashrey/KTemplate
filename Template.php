@@ -12,12 +12,16 @@ class Template{
 		$tpl      = self::$config['template_dir']. "/$name";
 		$id = hash('sha256', $tpl);
 		$compile  = self::$config['cache_dir'] . "/$id.php";
-		self::generate($tpl, $id, $var);
+		self::generate($tpl, $id, $var, $compile);
+		include $compile;
+		$fun = "_$id";
+		$fun($var);
 	}
 
-	static function generate($file, $id, $var){
+	static function generate($file, $id, $var, $compile){
 		$parse  = new Parse($file, $var);
 		$gen = new Generate($parse->getNodes(), $id, $var);
-		$gen->generate();
+		$buffer = $gen->generate();
+		file_put_contents($compile, $buffer);
 	}
 }

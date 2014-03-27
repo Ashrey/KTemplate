@@ -7,12 +7,20 @@ class Generate{
 
 	protected $nested = array();
 	protected $tabnumber = 1;
+	
+	protected $nodeList = null;
 	protected $node = null;
+
 	protected $id = null;
 
 	function __construct(NodeList $nodes, $name, $vars){
-		$this->init($name);
-		foreach ($nodes as  $node) {
+		$this->nodeList = $nodes;
+		$this->name = $name;
+	}
+
+	function generate(){
+		$this->init();
+		foreach ($this->nodeList as  $node) {
 			$this->node = $node;
 			$token = $node->stack();
 			/*Se saca el primero para conocer el contextoo*/
@@ -26,16 +34,15 @@ class Generate{
 		}
 		echo '}';
 		return ob_get_clean();
-		file_put_contents("$name.php", $buffer);
-		include "$name.php";$fun = "_$id";		$fun($vars);
 	}
 
 
-	function init($name){
+	function init(){
+		$name = $this->name;
 		echo '<?php', "\n";
 		echo '/*generation*/', "\n";
 		echo "function _$name(\$vars){", "\n";
-		echo "  extract(\$vars);", "\n";
+		echo $this->nl("extract(\$vars);\n");
 	}
 
 
