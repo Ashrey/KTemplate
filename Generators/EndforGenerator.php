@@ -7,5 +7,6 @@ class EndforGenerator extends Generators{
 	function generate(){
 		$this->nl("}\n");
 		$this->gen->lastNested(Token::T_FOR);
+        $this->end();
 	}
 }
