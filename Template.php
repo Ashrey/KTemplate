@@ -19,9 +19,11 @@ class Template{
 	}
 
 	static function generate($file, $id, $var, $compile){
-		$parse  = new Parse($file, $var);
-		$gen = new Generate($parse->getNodes(), $id, $var);
-		$buffer = $gen->generate();
-		file_put_contents($compile, $buffer);
+		if (!is_file($compile) || (filemtime($file) > filemtime($compile))){
+			$parse  = new Parse($file, $var);
+			$gen = new Generate($parse->getNodes(), $id, $var);
+			$buffer = $gen->generate();
+			file_put_contents($compile, $buffer);
+		}
 	}
 }
