@@ -2,7 +2,7 @@
 require "autoload.php";
 $config = array(
     'cache_dir' => 'tmp/',
-    'template_dir' => 'examples/',
+    'template_dir' => 'tpl/',
 );
 
 \KTemplate\Template::Configure($config);
