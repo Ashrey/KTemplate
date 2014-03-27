@@ -8,25 +8,39 @@ class ForGenerator extends Generators{
         $this->nested(Token::T_FOR);
         $this->nl("foreach(");
         $t1  =  $this->nextRequire(Token::T_IDENT);
-        $t2  =  $this->next();
+        $t2  =  $this->nextRequire(Token::T_COMMA, Token::T_IN);
         if($t2->is(Token::T_COMMA)){
-            $t3 = $this->nextRequire(Token::T_IDENT);
-            $t4 = $this->nextRequire(Token::T_IN);
-            $t5 = $this->nextRequire(Token::T_IDENT);
-            echo  '$', $t5->getValue();
-            echo ' as ';
-            echo '$', $t1->getValue();
-            echo ' => ';
-            echo '$', $t3->getValue();
-
-        }elseif($t2->is(Token::T_IN)){
-            $t3 = $this->nextRequire(Token::T_IDENT);
-            echo  '$', $t3->getValue();
-            echo ' as ';
-            echo '$', $t1->getValue();
+          $this->withValue($t1, $t2);
         }else{
-            $this->exception('Unespexting');
+            $this->withoutValue($t1, $t2); 
         }
         echo "){\n";
+        $this->end();
+    }
+
+    /**
+     * Generate foreach with values
+     * @param Token $t1
+     * @param Token $t2
+     */
+    function withValue($t1, $t2){
+        $t3 = $this->nextRequire(Token::T_IDENT);
+        $t4 = $this->nextRequire(Token::T_IN);
+        $t5 = $this->nextRequire(Token::T_IDENT);
+        echo sprintf ('$%s as $%s  => $%s ',
+            $t5->getValue(), $t1->getValue(), $t3->getValue()
+        );
+    }
+
+    /**
+     * Generate foreach without values
+     * @param Token $t1
+     * @param Token $t2
+     */
+    function withoutValue($t1, $t2){
+        $t3 = $this->nextRequire(Token::T_IDENT);
+        echo  sprintf ('$%s as $%s',
+            $t3->getValue(), $t1->getValue()
+        );
     }
 }

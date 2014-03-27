@@ -35,9 +35,10 @@ abstract class Generators{
      * Get the next token and verifique the type
      * @return Token
      */
-    function nextRequire($val){
+    function nextRequire(){
         $token = $this->next();
-        if(!$token->is($val)){
+        $args = func_get_args();
+        if(!$token->in($args)){
             $this->exception('Expenting '. $val);
         }
         return $token;
