@@ -1,27 +1,32 @@
 <?php
 namespace KTemplate\Generators;
 use KTemplate\Token;
-
+use KTemplate\Filter\Filter;
 class PrintGenerator extends Generators{
 
     function generate(){
-        $token = $this->next();
+        $token = $this->nextRequire(Token::T_STREAM, Token::T_IDENT);
+
         $str = $this->getPrint($token);
         $this->nl("echo $str ;\n");
+    }
+
+    function getStream($token){
+        return "'".  addcslashes($token->getValue(), "'\\") . "'";
+    }
+
+    function getIdem($token){
+        $str = '$'.$token->getValue();
+        return $this->applyFilter($str);
     }
 
     function getPrint($token){
         switch ($token->getType()) {
             case Token::T_STREAM:
-                return "'". addslashes($token->getValue()) . "'";
+                  return $this->getStream($token);
                 break;
             case Token::T_IDENT :
-                return '$'.$token->getValue();
-            case Token::T_ALPHANUM:
-                return self::printAlphanum($val, $tokens);
-            default:
-                return "''";
-                break;
+                return $this->getIdem($token);
         }
     }
 }
