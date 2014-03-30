@@ -24,11 +24,10 @@ class Parse{
 	function getNodes(){
 		$pila = new NodeList();
 		$this->current = new TextNode(1);
-		$lines = file($this->file);
-		$nLine = 0; /*Number of line*/
-		foreach ($lines as $l) {
+		$nLine = 0;
+		$file = fopen($this->file, 'r');
+		while(($this->buffer = fgets($file))) {
 			$nLine++;
-			$this->buffer = $l;
 			while($this->buffer){
 				$pos = strpos($this->buffer, $this->getToken());
 				if(($pos !== false) && $this->getCond($pos)){
@@ -42,14 +41,23 @@ class Parse{
 				}
 			}
 		}
+		fclose($file);
 		return $pila;
 	}
 
+	/**
+	 * Get the token to search
+	 * @return string
+	 */
 	protected function getToken(){
 		$c = $this->current;
-		return $this->current instanceof TextNode ?  '{'  :  $c::END_TOKEN;
+		return $c instanceof TextNode ?  '{'  :  $c::END_TOKEN;
 	}
 
+	/**
+	 * 	Return condition for node
+	 * @return bool
+	 */
 	protected function getCond($pos){
 		$str = $this->buffer;
 		return $this->current instanceof TextNode ? 
@@ -57,7 +65,9 @@ class Parse{
 			TRUE;
 	}
 
-
+	/**
+	 * Return node
+	 */
 	protected function getNode($token, $line){
 		if(!$this->current instanceof TextNode){
 			return new TextNode($line);
@@ -74,7 +84,5 @@ class Parse{
 		if($token == '{'){
 			return new PrintNode($line);
 		}
-
-
 	}
 }
