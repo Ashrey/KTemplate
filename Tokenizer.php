@@ -84,20 +84,19 @@ class Tokenizer{
     }
 
     function str($start){
-        $buffer = '';
-        $escape = false;
-        $this->pos++;
-        while($this->hasTokens()){
-            $char = $this->str[$this->pos];
-            if($char == $start && !$escape){
-                $this->pos++; /*quita la comilla de cierre*/
-                break;//salgo fin de la cadena
-            }
-            $escape = ($char == '\\');
-            $buffer .= $char;
-            $this->pos++;
+        $offset = $this->pos+1;
+        do{
+            $pos = strpos($this->str, $start, $offset);
+            $offset = $pos+1;
+        }while($pos && ($this->str[$pos-1] == '\\'));
+        if(!$pos){
+            throw new ParseException($this->node, 'unclosed string');  
         }
-        return new Token(Token::T_STRING, "'$buffer'");
+        /*calculate lenght of str end - init*/
+        $lenght = $pos - $this->pos + 1;
+        $buffer = substr($this->str, $this->pos,  $lenght);
+        $this->pos = $pos+1;
+        return new Token(Token::T_STRING, $buffer);
     }
 
     /**
