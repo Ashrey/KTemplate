@@ -121,11 +121,11 @@ abstract class Generators{
     function getFilter($filter){
         $name =  'KTemplate\\Filter\\'.ucfirst($filter).'Filter';
         if(!class_exists("$name")){
-            throw new \Exception("Filter $filter do not exits"); 
+            throw $this->exception("Filter $filter do not exits"); 
         }
         $f = new $name();
         if(!$f instanceof Filter){
-            throw new \Exception("$filter is  not a Filter"); 
+            throw $this->exception("$filter is  not a Filter"); 
         }
         return $f;
     }
