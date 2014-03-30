@@ -14,7 +14,7 @@ class ForGenerator extends Generators{
         }else{
             $this->withoutValue($t1, $t2); 
         }
-        echo "){\n";
+        $this->nl("){");
         $this->end();
     }
 
@@ -27,9 +27,9 @@ class ForGenerator extends Generators{
         $t3 = $this->nextRequire(Token::T_IDENT);
         $t4 = $this->nextRequire(Token::T_IN);
         $t5 = $this->nextRequire(Token::T_IDENT);
-        echo sprintf ('$%s as $%s  => $%s ',
+        $this->nl(sprintf ('$%s as $%s  => $%s ',
             $t5->getValue(), $t1->getValue(), $t3->getValue()
-        );
+        ));
     }
 
     /**
@@ -39,8 +39,8 @@ class ForGenerator extends Generators{
      */
     function withoutValue($t1, $t2){
         $t3 = $this->nextRequire(Token::T_IDENT);
-        echo  sprintf ('$%s as $%s',
+        $this->nl(sprintf ('$%s as $%s',
             $t3->getValue(), $t1->getValue()
-        );
+        ));
     }
 }

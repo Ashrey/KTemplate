@@ -31,8 +31,7 @@ class Generate{
 				echo  $obj->generate();
 			}
 		}
-		echo '}';
-		return ob_get_clean();
+		$this->output->write('}');
 	}
 
 	function nl($str){
@@ -50,14 +49,14 @@ class Generate{
 
 	function addNested($val){
 		$this->nested[] = $val;
-		$this->tabnumber++;
+		$this->output->tabInc();
 	}
 
 	function lastNested($val){
 		$last = array_pop($this->nested);
 		if($last != $val)
 			throw $this->parseError("Bad Closed");
-		$this->tabnumber--;
+		$this->output->tabDec();
 	}
 
 	function parseError($str){
