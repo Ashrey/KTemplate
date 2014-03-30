@@ -10,9 +10,10 @@ abstract class Generators{
     
     abstract function generate();
 
-    function __construct(Array $stack, Generate $generator){
+    function __construct(Array $stack, Generate $generator, $parse){
         $this->stack = $stack;
         $this->gen   = $generator;
+        $this->parse = $parse;
     }
 
     /**
@@ -20,7 +21,7 @@ abstract class Generators{
      * @param int $val typee of block
      */
     function nested($val){
-        $this->gen->addNested($val);
+        $this->parse->addNested($val);
     }
 
     /**

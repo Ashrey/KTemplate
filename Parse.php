@@ -5,7 +5,10 @@ use KTemplate\Node\TextNode;
 use KTemplate\Node\PrintNode;
 use KTemplate\Node\ExecNode;
 use KTemplate\Node\CommentNode;
+use KTemplate\Generators\Output;
 class Parse{
+
+    protected $nested = array();
 
     protected $file;
 
@@ -25,17 +28,18 @@ class Parse{
      * Get nodes
      * @return NodeList
      */
-    function getNodes(){
-        $pila = new NodeList();
+    function generate($compile, $id){
+        $this->output = new Output($compile);
         $this->current = new TextNode(1);
+        Generate::init($id, $this->output);
         $nLine = 0;
         $file = fopen($this->file, 'r');
         while(($this->buffer = fgets($file))) {
             $nLine++;
-            $this->inLine($pila, $nLine);
+            $this->inLine($nLine);
         }
         fclose($file);
-        return $pila;
+        $this->output->fwrite('}');
     }
 
     /**
@@ -44,13 +48,15 @@ class Parse{
      * @param int $nLine 
      * @return void
      */
-    protected function inLine(NodeList $pila, $nLine){
+    protected function inLine($nLine){
         while($this->buffer){
             $pos = strpos($this->buffer, $this->getToken());
             if(($pos !== false) && $this->getCond($pos)){
                 /*add to current node*/
                 $this->current->addContent(substr($this->buffer, 0, $pos));
-                $pila->add($this->current);
+                /*other node*/
+                $gen = new Generate($this->current, $this->output);
+                $gen->generate($this);
                 /*create new node*/
                 $this->current = $this->getNode($this->buffer[$pos + 1], $nLine);
                 $this->buffer = substr($this->buffer, $pos+2);
@@ -95,5 +101,18 @@ class Parse{
         );
         return ($this->current instanceof TextNode) ?
             $arr[$token] : new TextNode($line);
+    }
+
+
+    function addNested($val){
+        $this->nested[] = $val;
+        $this->output->tabInc();
+    }
+
+    function lastNested($val){
+        $last = array_pop($this->nested);
+        if($last != $val)
+            throw $this->parseError("Bad Closed");
+        $this->output->tabDec();
     }
 }
