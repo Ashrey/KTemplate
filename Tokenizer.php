@@ -93,7 +93,7 @@ class Tokenizer{
                 $this->pos++; /*quita la comilla de cierre*/
                 break;//salgo fin de la cadena
             }
-            $escape = ($char == '\\'):
+            $escape = ($char == '\\');
             $buffer .= $char;
             $this->pos++;
         }
