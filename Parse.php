@@ -83,22 +83,17 @@ class Parse{
 
     /**
      * Return node
+     * @param string $token
+     * @param int $line
+     * @return Node
      */
     protected function getNode($token, $line){
-        if(!$this->current instanceof TextNode){
-            return new TextNode($line);
-        }
-
-        if($token == '#'){
-            return new CommentNode($line);
-        }
-
-        if($token == '%'){
-            return new ExecNode($line);
-        }
-
-        if($token == '{'){
-            return new PrintNode($line);
-        }
+        $arr = array(
+            '#' => new CommentNode($line),
+            '%' => new ExecNode($line),
+            '{' => new PrintNode($line),
+        );
+        return ($this->current instanceof TextNode) ?
+            $arr[$token] : new TextNode($line);
     }
 }
