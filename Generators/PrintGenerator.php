@@ -7,7 +7,7 @@ class PrintGenerator extends Generators{
     function generate(){
         $token = $this->nextRequire(Token::T_STREAM, Token::T_IDENT, Token::T_STRING );
         $str = $this->getPrint($token);
-        $this->output->writeline("echo $str;");
+        $this->output->write($str);
         $this->end();
     }
 

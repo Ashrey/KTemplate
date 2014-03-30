@@ -7,6 +7,8 @@ use KTemplate\Node\Node;
 use KTemplate\Generators\Output;
 
 abstract class Generators{
+
+    static $echo = FALSE;
     /**
      * Stack of tokens
      * @var Array
@@ -149,15 +151,30 @@ abstract class Generators{
         return $str;
     }
 
-    static function code($node, $output, $parse){
+    static function code(Node $node, Output $output, Parse $parse){
         $token = $node->stack();
         /*Se saca el primero para conocer el contexto*/
         $first =  array_shift($token);
+        self::do_print($first, $output);
         $name = ucfirst($first->name());
         $class = "\\KTemplate\\Generators\\{$name}Generator";
         if(class_exists($class)){
             $obj = new $class($token, $parse, $output);
             $obj->generate();
+        }
+    }
+
+    static function do_print($first, $output){
+        if($first->is(Token::T_PRINT)){
+            if(self::$echo){
+                $output->write(', ');
+            }else{
+                self::$echo = TRUE;
+                $output->startLine()->write('echo ');
+            }
+        }elseif(self::$echo){
+            self::$echo = FALSE;
+            $output->writeln(';');
         }
     }
 
