@@ -10,9 +10,9 @@ class ForGenerator extends Generators{
         $t1  =  $this->nextRequire(Token::T_IDENT);
         $t2  =  $this->nextRequire(Token::T_COMMA, Token::T_IN);
         if($t2->is(Token::T_COMMA)){
-          $this->withValue($t1, $t2);
+          $this->withValue($t1);
         }else{
-            $this->withoutValue($t1, $t2); 
+            $this->withoutValue($t1); 
         }
         $this->output->writeln("){")->indUp();
         $this->end();
@@ -21,9 +21,8 @@ class ForGenerator extends Generators{
     /**
      * Generate foreach with values
      * @param Token $t1
-     * @param Token $t2
      */
-    function withValue($t1, $t2){
+    function withValue($t1){
         $t3 = $this->nextRequire(Token::T_IDENT);
         $t4 = $this->nextRequire(Token::T_IN);
         $t5 = $this->nextRequire(Token::T_IDENT);

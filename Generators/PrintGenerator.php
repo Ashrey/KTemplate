@@ -15,7 +15,6 @@ class PrintGenerator extends Generators{
         switch ($token->getType()) {
             case Token::T_STREAM:
                   return $this->getStream($token);
-                break;
             case Token::T_IDENT :
                 return $this->getIdem($token);
             case Token::T_STRING :
