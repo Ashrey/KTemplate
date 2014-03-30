@@ -35,8 +35,4 @@ class Generate{
 		$output->writeln("function _$name(\$vars){");
 		$output->writeln('extract($vars);');
 	}
-
-	function parseError($str){
-		return new ParseException($this->node, $str);
-	}
 }

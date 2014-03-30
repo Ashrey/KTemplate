@@ -8,7 +8,15 @@ use KTemplate\Node\CommentNode;
 use KTemplate\Generators\Output;
 class Parse{
 
+    /**
+     * Nested store for blocks
+     */
     protected $nested = array();
+
+    /**
+     * Output object
+     */
+    protected $output = null;
 
     protected $file;
 
@@ -114,5 +122,13 @@ class Parse{
         if($last != $val)
             throw $this->parseError("Bad Closed");
         $this->output->tabDec();
+    }
+
+    /**
+     * Thow a parse Exception
+     * @param string $str message for exception
+     */
+    function parseError($str){
+        return new ParseException($this->current, $str);
     }
 }
