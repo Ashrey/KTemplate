@@ -71,6 +71,7 @@ abstract class Generators{
      * @return Token 
      */
     function nextIfIs(){
+        if(!$this->hasToken()) return null;
         $token  =  $this->stack[0];
         return $token->in(func_get_args()) ? $this->next() : null;
     }
@@ -117,12 +118,11 @@ abstract class Generators{
      * @return string
      */
     function applyFilter($str){
-        while($this->hasToken() && $this->nextIs(Token::T_PIPE)){
-            $this->next(); /*read the pipe | */
+        while($this->nextIfIs(Token::T_PIPE)){
             $token = $this->nextRequire(Token::T_IDENT);
             /*Tiene argumentos*/
             $arg = array();
-            if($this->hasToken() && $this->nextIfIs(Token::T_DDOT)){
+            if($this->nextIfIs(Token::T_DDOT)){
                 $arg[] = $this->nextRequire(Token::T_IDENT, Token::T_NUMBER, Token::T_STRING)->getValue();
             }
             $filter = $this->getFilter($token->getValue());
