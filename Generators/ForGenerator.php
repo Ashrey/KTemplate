@@ -6,7 +6,7 @@ class ForGenerator extends Generators{
 
     function generate(){
         $this->nested(Token::T_FOR);
-        $this->nl("foreach(");
+        $this->output->startLine()->write("foreach(");
         $t1  =  $this->nextRequire(Token::T_IDENT);
         $t2  =  $this->nextRequire(Token::T_COMMA, Token::T_IN);
         if($t2->is(Token::T_COMMA)){
@@ -14,7 +14,7 @@ class ForGenerator extends Generators{
         }else{
             $this->withoutValue($t1, $t2); 
         }
-        $this->nl("){");
+        $this->output->writeln("){")->indUp();
         $this->end();
     }
 
@@ -27,7 +27,7 @@ class ForGenerator extends Generators{
         $t3 = $this->nextRequire(Token::T_IDENT);
         $t4 = $this->nextRequire(Token::T_IN);
         $t5 = $this->nextRequire(Token::T_IDENT);
-        $this->nl(sprintf ('$%s as $%s  => $%s ',
+        $this->output->write(sprintf ('$%s as $%s  => $%s ',
             $t5->getValue(), $t1->getValue(), $t3->getValue()
         ));
     }
@@ -35,11 +35,10 @@ class ForGenerator extends Generators{
     /**
      * Generate foreach without values
      * @param Token $t1
-     * @param Token $t2
      */
-    function withoutValue($t1, $t2){
+    function withoutValue($t1){
         $t3 = $this->nextRequire(Token::T_IDENT);
-        $this->nl(sprintf ('$%s as $%s',
+        $this->output->write(sprintf ('$%s as $%s',
             $t3->getValue(), $t1->getValue()
         ));
     }

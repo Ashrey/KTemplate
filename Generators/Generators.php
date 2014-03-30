@@ -163,9 +163,10 @@ abstract class Generators{
 
 
     static function init($name, $output){
-        $output->writeln('<?php');
-        $output->writeln('/*generation*/');
-        $output->writeln("function _$name(\$vars){");
-        $output->writeln('extract($vars);');
+        $output->writeline('<?php');
+        $output->writeline('/*generation*/');
+        $output->writeline("function _$name(\$vars){");
+        $output->indUp();
+        $output->writeline('extract($vars);');
     }
 }

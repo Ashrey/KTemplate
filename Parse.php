@@ -114,14 +114,14 @@ class Parse{
 
     function addNested($val){
         $this->nested[] = $val;
-        $this->output->tabInc();
+        $this->output->indUp();
     }
 
     function lastNested($val){
         $last = array_pop($this->nested);
         if($last != $val)
             throw $this->parseError("Bad Closed");
-        $this->output->tabDec();
+        $this->output->indDown();
     }
 
     /**
