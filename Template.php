@@ -1,5 +1,6 @@
 <?php
 namespace KTemplate;
+use KTemplate\Generators\Output;
 
 class Template{
     protected static $config = array(
@@ -23,9 +24,9 @@ class Template{
     static function generate($file, $id, $var, $compile){
         if (!is_file($compile) || !self::$config['check_cache'] || (filemtime($file) > filemtime($compile))){
             $parse  = new Parse($file, $var);
-            $gen = new Generate($parse->getNodes(), $id, $var);
-            $buffer = $gen->generate();
-            file_put_contents($compile, $buffer);
+            $n = $parse->getNodes();
+            $gen = new Generate($n, $id, $var, new Output($compile));
+            $gen->generate();
         }
     }
 }

@@ -2,20 +2,19 @@
 namespace KTemplate;
 
 use KTemplate\Node\NodeList;
+use KTemplate\Generators\Output;
 
 class Generate{
-
 	protected $nested = array();
-	protected $tabnumber = 1;
-	
 	protected $nodeList = null;
 	protected $node = null;
 
 	protected $id = null;
 
-	function __construct(NodeList $nodes, $name, $vars){
+	function __construct(NodeList $nodes, $name, $vars, Output $out){
 		$this->nodeList = $nodes;
 		$this->name = $name;
+		$this->output = $out;
 	}
 
 	function generate(){
@@ -36,13 +35,16 @@ class Generate{
 		return ob_get_clean();
 	}
 
+	function nl($str){
+		$this->output->writeln($str);
+	}
 
 	function init(){
 		$name = $this->name;
-		echo '<?php', "\n";
-		echo '/*generation*/', "\n";
-		echo "function _$name(\$vars){", "\n";
-		echo $this->nl("extract(\$vars);\n");
+		$this->nl('<?php');
+		$this->nl('/*generation*/');
+		$this->nl("function _$name(\$vars){");
+		$this->nl('extract($vars);');
 	}
 
 
@@ -62,9 +64,7 @@ class Generate{
 		return new ParseException($this->node, $str);
 	}
 
-	function nl($str){
-		echo str_repeat('  ', $this->tabnumber), $str;
-	}
+	
 
 
 }
