@@ -9,8 +9,6 @@ class Tokenizer{
 
 	protected $tokens = array();
 
-
-
 	function __construct(Node\Node $node){
 		$this->str = (string)$node;
 		$this->node = $node;
@@ -98,12 +96,14 @@ class Tokenizer{
 		return $buffer;
 	}
 
+	/**
+	 * Get a number sentence token
+	 * @return Token
+	 */
 	function number(){
 		$buffer = $this->getToken('ctype_digit');
 		return new Token(Token::T_NUMBER, $buffer);
 	}
-
-
 
 	function alphanum(){
 		$buffer =  $this->getToken('KTemplate\Tokenizer::ctype_alphadash');
@@ -139,13 +139,13 @@ class Tokenizer{
 		}
 	}
 
+	/**
+	 * Return all token
+	 * @return Array
+	 */
 	public function getTokens(){
 		while (($t = $this->nextToken())) {
 			$this->tokens[] = $t;
-		}
-		if (empty($this->tokens)){
-			var_dump($this->node);
-			die;
 		}
 		return $this->tokens;
 	}
