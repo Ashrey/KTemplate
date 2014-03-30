@@ -8,6 +8,8 @@ class Generate{
 	
 	protected $node = null;
 
+	protected $output = null;
+
 	function __construct(Node $node, Output $out){
 		$this->node = $node;
 		$this->output = $out;
