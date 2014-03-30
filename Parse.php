@@ -5,6 +5,7 @@ use KTemplate\Node\TextNode;
 use KTemplate\Node\PrintNode;
 use KTemplate\Node\ExecNode;
 use KTemplate\Node\CommentNode;
+use KTemplate\Generators\Generators;
 use KTemplate\Generators\Output;
 class Parse{
 
@@ -39,7 +40,7 @@ class Parse{
     function generate($compile, $id){
         $this->output = new Output($compile);
         $this->current = new TextNode(1);
-        Generate::init($id, $this->output);
+        Generators::init($id, $this->output);
         $nLine = 0;
         $file = fopen($this->file, 'r');
         while(($this->buffer = fgets($file))) {
@@ -63,8 +64,7 @@ class Parse{
                 /*add to current node*/
                 $this->current->addContent(substr($this->buffer, 0, $pos));
                 /*other node*/
-                $gen = new Generate($this->current, $this->output);
-                $gen->generate($this);
+                Generators::code($this->current, $this->output, $this);
                 /*create new node*/
                 $this->current = $this->getNode($this->buffer[$pos + 1], $nLine);
                 $this->buffer = substr($this->buffer, $pos+2);

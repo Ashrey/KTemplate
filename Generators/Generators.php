@@ -1,20 +1,37 @@
 <?php
 namespace KTemplate\Generators;
-use KTemplate\Generate;
 use KTemplate\Token;
+use KTemplate\Parse;
 use KTemplate\Filter\Filter;
+use KTemplate\Node\Node;
+use KTemplate\Generators\Output;
 
 abstract class Generators{
+    /**
+     * Stack of tokens
+     * @var Array
+     */
     protected $stack = array();
-    protected $gen   = null; 
-    
-    abstract function generate();
+   
+    /**
+     * Parse Object
+     * @var Parse
+     */
+    protected $parse   = null; 
 
-    function __construct(Array $stack, Generate $generator, $parse){
-        $this->stack = $stack;
-        $this->gen   = $generator;
-        $this->parse = $parse;
+    /**
+     * Ouput object
+     * @var Output
+     */
+    protected $output = null;
+
+    function __construct(Array $stack, Parse $parse, Output $o){
+        $this->stack  = $stack;
+        $this->parse  = $parse;
+        $this->output = $o;
     }
+
+    abstract function generate();
 
     /**
      * Init of nested block
@@ -91,14 +108,14 @@ abstract class Generators{
      * @param string $str
      */
     function exception($str){
-        throw $this->gen->parseError($str);
+        throw $this->parse->parseError($str);
     }
 
     /**
      * Write new line with identation
      */
     function nl($str){
-        $this->gen->nl($str);
+        $this->output->writeln($str);
     }
 
     function getFilter($filter){
@@ -130,5 +147,25 @@ abstract class Generators{
             $str = $filter->generate($str, $arg);
         }
         return $str;
+    }
+
+    static function code($node, $output, $parse){
+        $token = $node->stack();
+        /*Se saca el primero para conocer el contexto*/
+        $first =  array_shift($token);
+        $name = ucfirst($first->name());
+        $class = "\\KTemplate\\Generators\\{$name}Generator";
+        if(class_exists($class)){
+            $obj = new $class($token, $parse, $output);
+            $obj->generate();
+        }
+    }
+
+
+    static function init($name, $output){
+        $output->writeln('<?php');
+        $output->writeln('/*generation*/');
+        $output->writeln("function _$name(\$vars){");
+        $output->writeln('extract($vars);');
     }
 }
