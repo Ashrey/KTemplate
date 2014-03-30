@@ -18,6 +18,10 @@ class Tokenizer{
 	}
 
 
+	/**
+	 * Get the next token
+	 * @return Token
+	 */
 	function nextToken(){
 		while($this->hasTokens()){
 			$char = $this->str[$this->pos];
@@ -35,7 +39,6 @@ class Tokenizer{
 					case '.':
 					case ',':
 					case ':':
-
 						$this->pos++;
 						return new Token(ord($char), null);
 						break;
@@ -46,6 +49,10 @@ class Tokenizer{
 		return false;
 	}
 
+	/**
+	 * Return True if has token
+	 * @return bool
+	 */
 	function hasTokens(){
 		return isset($this->str[$this->pos]);
 	}
@@ -73,32 +80,33 @@ class Tokenizer{
 		return new Token(Token::T_STRING, "'$buffer'");
 	}
 
-	function number(){
+	/**
+	 * Get token
+	 * @param string $func name of function
+	 * @return string
+	 */
+	function getToken($func){
 		$buffer = '';
-		$escape = false;
 		while($this->hasTokens()){
 			$char = $this->str[$this->pos];
-			if(!ctype_digit($char)){
-				/*lei un caracter demas*/
-				//$this->pos--; 
+			if(!call_user_func($func, $char)){
 				break;//salgo fin de la cadena
 			}
 			$buffer .= $char;
 			$this->pos++;
 		}
+		return $buffer;
+	}
+
+	function number(){
+		$buffer = $this->getToken('ctype_digit');
 		return new Token(Token::T_NUMBER, $buffer);
 	}
 
+
+
 	function alphanum(){
-		$buffer = '';
-		while($this->hasTokens()){
-			$char = $this->str[$this->pos];
-			if(!ctype_alpha($char) && $char != '_'){
-				break;//salgo fin de la cadena
-			}
-			$buffer .= $char;
-			$this->pos++;
-		}
+		$buffer =  $this->getToken('KTemplate\Tokenizer::ctype_alphadash');
 		/*verifico si es una palabra reservada*/
 		$word = trim($buffer);
 		$key = array_search($word, Token::$ALL_TOKEN);	
@@ -140,6 +148,10 @@ class Tokenizer{
 			die;
 		}
 		return $this->tokens;
+	}
+
+	static function ctype_alphadash($char){
+		return ctype_alpha($char) || $char == '_';
 	}
 	
 }
