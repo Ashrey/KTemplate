@@ -20,7 +20,7 @@ class Tokenizer{
 	 * Get the next token
 	 * @return Token
 	 */
-	function nextToken(){
+	function next(){
 		while($this->hasTokens()){
 			$char = $this->str[$this->pos];
 			if(in_array($char, array('\'', '"'))){ 
@@ -39,13 +39,41 @@ class Tokenizer{
 					case ':':
 						$this->pos++;
 						return new Token(ord($char), null);
-						break;
 				}
 			}
 			$this->pos++;
 		}
 		return false;
 	}
+
+	/**
+	 * Return token if next token is in list
+	 * @return Token
+	 */
+	function nextIs(){
+		$token = $this->next();
+		/*Not has token*/
+		if(!$token)
+			return false;
+		if($token->in(func_get_args())){
+			return $token;
+		}
+		$this->pos -= $token->length() + 1;
+		return  null;
+	}
+
+	/**
+	 * Return token if next token is in list and thow exception if not more token
+	 * @return Token
+	 */
+	function nextIsRequired(){
+		$val = call_user_func_array(array($this, 'nextIs'), func_get_args());
+		if(!$val){
+			throw new ParseException($this->node, 'Expecting');
+		}
+		return  $val;
+	}
+
 
 	/**
 	 * Return True if has token
@@ -113,28 +141,15 @@ class Tokenizer{
 		if($key !== FALSE){
 			return new Token($key, $word);
 		}
-		$next = $this->nextToken();
-		if($next && $next->is(Token::T_O_CORCH)){
-			$next = $this->nextToken();
+	
+		if($this->nextIs(Token::T_O_CORCH)){
 			$word.= '['; /*añado el corchete*/
-			if($next  && $next->is(Token::T_IDENT) ||
-			 	$next->is(Token::T_STRING) ||
-			  	$next->is(Token::T_NUMBER)){
-				if($next->is(Token::T_IDENT))
-					$word.= '$';
-				$word.= $next->getValue();
-				$next = $this->nextToken();
-				if(!$next || !$next->is(Token::T_C_CORCH)){
-					throw new ParseException($this->node, 'Expecting ]');
-				}
-				return  new Token(Token::T_IDENT, "$word]");
-			}else{
-				var_dump($next);
-				throw new ParseException($this->node, 'Expenting Identifiquer');
-			}
-		}else{
-			if($next)
-				$this->pos -= $next->length() + 1;
+			$next = $this->nextIsRequired(Token::T_IDENT, Token::T_STRING, Token::T_NUMBER);
+			if($next->is(Token::T_IDENT)) $word.= '$';
+			$word.= $next->getValue();
+			$this->nextIsRequired(Token::T_C_CORCH);
+			return  new Token(Token::T_IDENT, "$word]");
+		}else{	
 			return  new Token(Token::T_IDENT, $word);
 		}
 	}
@@ -144,7 +159,7 @@ class Tokenizer{
 	 * @return Array
 	 */
 	public function getTokens(){
-		while (($t = $this->nextToken())) {
+		while (($t = $this->next())) {
 			$this->tokens[] = $t;
 		}
 		return $this->tokens;
