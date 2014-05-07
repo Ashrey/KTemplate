@@ -1,22 +1,21 @@
 <h1>{{ title }} - {{ 'A STRING Brian O\'Conner' | lower }} </h1>
 
-
 <ul>
 {% for i, j in people %}
     <li> {{ i }} - {{ j['first_name']}}
-    {% if j['gender'] == 'Male' %}
-
+    {% if j['gender'] = 'Male' %}
+        Hombre
     {%else%}
-
-    {%endif%} 
+        Mujer
+    {% endif %} 
     </li>
 {% endfor %}
 </ul>
 
 {# Show list of dates #}
 {% for date in days %}
-    <h3>{{ date|date:"F" }}</h3>
-    <a href="{{ date|date:"M/d"|lower }}/">{{ date|date:"j" }}</a>
+    <h3>{{ date|date:"F" }} <a href="{{ date|date:"M/d"|lower }}/">{{ date|date:"j" }}</a></h3>  
 {% endfor %}
+
 
 {% include templates.base %}

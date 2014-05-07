@@ -15,7 +15,6 @@ $people =  array(
     array('first_name' => 'Pat', 'last_name' => 'Smith', 'gender' => 'Unknown', 'bar' => 'foo'),
     array('first_name' => '"Cesar', 'last_name' => 'Rodas"', 'gender' => 'Male'),
 );
-
 $vars = array(
     'some_list' => array(1, 2, 3, 4, 4, 4, 5),
     'title' => 'crodas',
@@ -34,6 +33,8 @@ $vars = array(
 
 
 $time = microtime(TRUE);
-$mem = memory_get_usage();
 \KTemplate\Template::load('index.html', $vars);
-var_dump(array('memory' => (memory_get_usage()-$mem)/(1024*1024), 'seconds' => microtime(TRUE)-$time));
+$total = microtime(TRUE)-$time; 
+$mem = memory_get_usage();
+
+var_dump(array('memory' => (memory_get_usage()-$mem)/(1024*1024), 'seconds' => $total));
