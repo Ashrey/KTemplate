@@ -101,7 +101,8 @@ abstract class Generators{
      */
     function end(){
         if($this->hasToken()){
-            $this->exception('Un xpenting mode tokens');
+            var_dump($this->stack);
+            $this->exception('Unexpected token');
         }
     }
 
