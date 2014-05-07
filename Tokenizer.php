@@ -29,7 +29,7 @@ class Tokenizer{
                 return $this->number();
             }elseif(ctype_alpha($char) || $char == '_'){
                 return $this->alphanum();
-            }elseif(in_array($char, array('|', '[', ']', '.', ',', ':'))){
+            }elseif(in_array($char, array('|', '[', ']', '.', ',', ':', '='))){
                 $this->pos++;
                 return new Token(ord($char), null);
             }
