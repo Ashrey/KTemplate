@@ -179,7 +179,7 @@ abstract class Generators{
         }
     }
 
-
+    /*Generate a header of file*/
     static function init($name, $output){
         $output->writeline('<?php');
         $output->writeline('/*generation*/');

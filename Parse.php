@@ -35,6 +35,8 @@ class Parse{
 
     /**
      * Get nodes
+     * @param string $compile name of file compiled
+     * @param string $id 
      * @return NodeList
      */
     function generate($compile, $id){
