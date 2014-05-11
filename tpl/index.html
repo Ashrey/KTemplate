@@ -17,5 +17,6 @@
     <h3>{{ date|date:"F" }} <a href="{{ date|date:"M/d"|lower }}/">{{ date|date:"j" }}</a></h3>  
 {% endfor %}
 
+ {% inline  'inline.html'            %}
 
 {% include templates.base %}
