@@ -159,10 +159,19 @@ abstract class Generators{
         self::do_print($first, $output);
         $name = ucfirst($first->name());
         $class = "\\KTemplate\\Generators\\{$name}Generator";
+        $value =  ucfirst($first->getValue());
+        $tag   = "\\KTemplate\\Generators\\Tag\\{$value}Tag";
         if(class_exists($class)){
             $obj = new $class($token, $parse, $output);
             $obj->generate();
+        }elseif($name == 'Ident' && class_exists($tag)){
+            $obj = new $tag($token, $parse, $output);
+            $obj->generate();
+        }elseif(!in_array($name, array('Print', 'Comment'))){
+            
+            throw new \RuntimeException("Unexpected  $name - $value - $tag"); 
         }
+        
     }
 
     static function do_print($first, $output){
