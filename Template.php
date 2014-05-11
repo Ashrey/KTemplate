@@ -7,8 +7,10 @@ class Template{
         'check_cache' => false,
     );
 
-    static function configure($c){
-        self::$config = array_merge(self::$config, $c);
+    static function configure(Array $c = null){
+        if($c)
+            self::$config = array_merge(self::$config, $c);
+        return self::$config;
     }
 
     static function load($name, $var){
