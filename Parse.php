@@ -39,10 +39,11 @@ class Parse{
      * @param string $id 
      * @return NodeList
      */
-    function generate($compile, $id){
+    function generate($compile, $id = null){
         $this->output = new Output($compile);
         $this->current = new TextNode(1);
-        Generators::init($id, $this->output);
+        if(is_string($id))
+            Generators::init($id, $this->output);
         $nLine = 0;
         $file = fopen($this->file, 'r');
         while(($this->buffer = fgets($file))) {
@@ -50,7 +51,8 @@ class Parse{
             $this->inLine($nLine);
         }
         fclose($file);
-        $this->output->fwrite('}');
+        if(is_string($id))
+            $this->output->fwrite('}');
     }
 
     /**
