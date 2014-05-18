@@ -26,8 +26,6 @@ class Token{
     const T_AND        = 25;
     const T_OR         = 26;
 
-
-
     const T_COMMA      = 44;  /* , */
     const T_DOT        = 46;  /* . */
     const T_DDOT       = 58;  /* : */
@@ -62,9 +60,6 @@ class Token{
     protected $value;
     protected $type;
 
-    /**
-     * 
-     */
     function __construct($type, $value){
         $this->type  = $type;
         $this->value = $value;
@@ -120,15 +115,6 @@ class Token{
         return Token::$ALL_TOKEN[$this->type];
     }
 
-
-    /**
-     * Print a identify
-     * @return string
-     */
-    function printIdent(){
-        return "\${$this->value}";
-    }
-
     /**
      * Print a equal
      * @return string
@@ -156,6 +142,11 @@ class Token{
 
     function __toString(){
         $call = 'print'. $this->name();
-        return $this->$call();
+        try {
+            return $this->$call();
+        } catch (\Exception $e) {
+            return '';
+        }
+        
     }
 }
