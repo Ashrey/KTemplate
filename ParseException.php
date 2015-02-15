@@ -1,9 +1,9 @@
 <?php
 namespace KTemplate;
-class ParseException extends \Exception{
-	
-	function __construct(Node\Node $node, $desc){
-		$str = $desc . '. In line: ' .$node->getLine();
+class ParseException extends \Exception {
+
+	function __construct($line, $desc) {
+		$str = $desc . '. In line: ' . $line;
 		parent::__construct($str);
 	}
 }
