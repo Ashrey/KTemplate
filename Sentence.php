@@ -71,10 +71,13 @@ class Sentence {
 	function code_if() {
 		$this->comp->addNested('if');
 		$part = explode(' ', $this->text);
-		$node = new Node\ExecNode(0);
-		$node->addContent(substr($this->text, 3));
+		$node = new Node\ExecNode(substr($this->text, 3));
 		$part = $node->stack();
 		$text = '';
+		/**
+		 * @TODO
+		 * IS valid?
+		 */
 		foreach ($part as $key) {
 			$text .= (string) $key;
 		}

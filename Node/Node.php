@@ -6,18 +6,16 @@ use KTemplate\Tokenizer;
 abstract class Node {
 	const END_TOKEN = '';
 
-	protected $_line = 0;
-
 	protected $_content = '';
 
 	protected $stack = null;
 
 	/**
 	 * Create a new node
-	 * @param int $line number of line
+	 * @param String $text number of line
 	 */
-	function __construct($line) {
-		$this->_line = $line;
+	function __construct($text) {
+		$this->_content = $text;
 	}
 
 	public function stack() {
