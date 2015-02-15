@@ -43,6 +43,9 @@ class Sentence {
 			$comp->removeNested($block);
 			if ($cut[0] != 'endblock') {
 				$this->code = '<?php } ?>';
+			} else {
+				$this->comp->setCurrent('main');
+
 			}
 
 		}

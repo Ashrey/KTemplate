@@ -108,7 +108,9 @@ class Compiler {
 		if (isset($this->block[$c])) {
 			$this->parseError("Can't rewrite block $c");
 		}
-		$this->block[$c] = '';
+		if ($c != 'main') {
+			$this->block[$c] = '';
+		}
 		$this->current = $c;
 
 	}

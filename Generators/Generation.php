@@ -33,6 +33,11 @@ class Generation {
 		$output->writeline('{');
 		$output->indUp();
 		foreach ($this->c->getBlocks() as $key => $value) {
+			/*Main block in child template*/
+			if ($key == 'main' && isset($id)) {
+				continue;
+			}
+
 			$output->writeline("static function $key(\$vars){");
 			$output->indUp();
 			$output->writeline('extract($vars);?>');
