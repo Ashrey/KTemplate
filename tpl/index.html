@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 <h1>{{ title }} - {{ 'A STRING Brian O\'Conner' | lower }} </h1>
 
 <ul>
@@ -18,5 +20,9 @@
 {% endfor %}
 
  {% inline  'inline.html'            %}
+
+{% block alberto %}
+    Mi bloque
+{% endblock %}
 
 {% include templates.base %}
