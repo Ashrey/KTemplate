@@ -4,8 +4,6 @@ class Sentence {
 
 	const RE_FOR = '/for\s(\w+)(?:,\s+(\w+))?\sin\s(\w+)/';
 
-	const RE_IF = '/for\s(\w+)(?:,\s+(\w+))?\sin\s(\w+)/';
-
 	/**
 	 * Text of sentence
 	 * @var string
@@ -34,7 +32,6 @@ class Sentence {
 			if (method_exists($this, $cb)) {
 				$this->code = $this->$cb();
 			}
-			var_dump($cut);
 		} else {
 			$block = substr($cut[0], 3);
 			$comp->removeNested($block);
@@ -62,12 +59,22 @@ class Sentence {
 	function code_if() {
 		$this->comp->addNested('if');
 		$part = explode(' ', $this->text);
-		var_dump($part);
-		return 'if(true){';
+		$node = new Node\ExecNode(0);
+		$node->addContent(substr($this->text, 3));
+		$part = $node->stack();
+		$text = '';
+		foreach ($part as $key) {
+			$text .= (string) $key;
+		}
+		return "if($text){";
 	}
 
 	function code_else() {
 		return '}else{';
+	}
+
+	function code_inline() {
+		return '';
 	}
 
 }
