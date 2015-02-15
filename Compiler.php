@@ -53,11 +53,11 @@ class Compiler {
 		$typeArray = array('{' => 'variable', '%' => 'execution', '#' => 'comment');
 		/*Only 1 and 3 are important*/
 		$type = $typeArray[$match[1]];
-		return '<?php ' . $this->$type(trim($match[3])) . ' ?>';
+		return $this->$type(trim($match[3]));
 	}
 
 	function comment($val) {
-		return "/*{$val}*/";
+		return "<?php  /*{$val}*/ ?>";
 	}
 
 	function execution($val) {
