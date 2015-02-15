@@ -31,13 +31,9 @@ $vars = array(
 );
 
 $time = microtime(TRUE);
-/*
+
 $tpl = new \KTemplate\Template($config);
-$tpl->load('index.html', $vars);
- */
-$a = new \KTemplate\Compiler();
-$a->parse('tpl/index.html');
-$a->go($vars);
+$tpl->render('index.html', $vars);
 
 $total = microtime(TRUE) - $time;
 $mem = memory_get_usage();
