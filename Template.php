@@ -1,32 +1,43 @@
 <?php
 namespace KTemplate;
-use KTemplate\Generators\Output;
 
-class Template{
-    protected static $config = array(
-        'check_cache' => false,
-    );
+class Template {
 
-    static function configure(Array $c = null){
-        if($c)
-            self::$config = array_merge(self::$config, $c);
-        return self::$config;
-    }
+	/**
+	 * Configuration of template engine
+	 * @var array
+	 */
+	protected $config = array(
+		'use_cache' => false,
+	);
 
-    static function load($name, $var){
-        $tpl = self::$config['template_dir']. "/$name";
-        $id  = hash('sha256', $tpl);
-        $compile  = self::$config['cache_dir'] . "/$id.php";
-        self::generate($tpl, $id, $var, $compile);
-        include $compile;
-        $fun = "_$id";
-        $fun($var);
-    }
+	protected $tpl_file = '';
 
-    static function generate($file, $id, $var, $compile){
-        if (!is_file($compile) || !self::$config['check_cache'] || (filemtime($file) > filemtime($compile))){
-            $parse  = new Parse($file, $var);
-            $parse->generate($compile, $id);
-        }
-    }
+	protected $compilated = '';
+
+	function __construct(Array $c = null) {
+		if ($c) {
+			$this->config = array_merge($this->config, $c);
+		}
+
+	}
+
+	function load($name, $var) {
+		$this->tpl_file = "{$this->config['template_dir']}/$name";
+		$id = hash('sha256', $this->tpl_file);
+		$this->compilated = "{$this->config['cache_dir']}/$id.php";
+		self::generate($id, $var);
+		include $this->compilated;
+		$fun = "_$id";
+		$fun($var);
+	}
+
+	function generate($id, $var) {
+		if (!is_file($this->compilated) ||
+			!$this->config['use_cache'] ||
+			(filemtime($this->tpl_file) > filemtime($this->compilated))) {
+			$parse = new Compiler($this->tpl_file, $var);
+			$parse->generate($this->compilated, $id);
+		}
+	}
 }
