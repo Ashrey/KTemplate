@@ -4,6 +4,12 @@ class Sentence {
 
 	const RE_FOR = '/for\s(\w+)(?:,\s+(\w+))?\sin\s(\w+)/';
 
+	const RE_INLINE = '/^\s*inline\s+(\'|")([\w.\n]+)\1\s*$/';
+
+	const RE_BLOCK = '/^block (\w+)$/';
+
+	const RE_EXTENDS = '/^\s*extends\s+(\'|")([\w.\n]+)\1\s*$/';
+
 	/**
 	 * Text of sentence
 	 * @var string
@@ -35,7 +41,10 @@ class Sentence {
 		} else {
 			$block = substr($cut[0], 3);
 			$comp->removeNested($block);
-			$this->code = '}';
+			if ($cut[0] != 'endblock') {
+				$this->code = '<?php } ?>';
+			}
+
 		}
 
 	}
@@ -50,9 +59,9 @@ class Sentence {
 		}
 		$this->comp->addNested('for');
 		if (!empty($match[2])) {
-			return sprintf('foreach($%s as $%s  => $%s){', $match[3], $match[1], $match[2]);
+			return sprintf('<?php foreach($%s as $%s  => $%s){ ?>', $match[3], $match[1], $match[2]);
 		}
-		return sprintf('foreach($%s as $%s){', $match[3], $match[1]);
+		return sprintf('<?php foreach($%s as $%s){ ?>', $match[3], $match[1]);
 
 	}
 
@@ -66,15 +75,36 @@ class Sentence {
 		foreach ($part as $key) {
 			$text .= (string) $key;
 		}
-		return "if($text){";
+		return "<?php if($text){ ?>";
 	}
 
 	function code_else() {
-		return '}else{';
+		return '<?php }else{ ?>';
 	}
 
 	function code_inline() {
-		return '';
+		if (0 == preg_match(self::RE_INLINE, $this->text, $match)) {
+			throw new ParseException($this->line, $str);
+		}
+		$tpl = $this->comp->getTpl();
+		$comp = new Compiler($tpl, $match[2]);
+		return $comp->generate();
 	}
 
+	function code_block() {
+		if (0 == preg_match(self::RE_BLOCK, $this->text, $match)) {
+			throw new ParseException($this->line, $str);
+		}
+		$this->comp->addNested('block');
+		$this->comp->setCurrent($match[1]);
+		return "<?php static::{$match[1]}(\$vars);?>";
+	}
+
+	function code_extends() {
+		if (0 == preg_match(self::RE_EXTENDS, $this->text, $match)) {
+			throw new ParseException($this->line, $str);
+		}
+		$tpl = $this->comp->getTpl();
+		$this->comp->setParent($tpl->load($match[2]));
+	}
 }
