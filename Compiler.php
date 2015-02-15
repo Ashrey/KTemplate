@@ -6,14 +6,31 @@ class Compiler {
 	 */
 	const INTERPOLATE = '/\{([#%]|({))(.+)(?(2)\}|\1)}/U';
 
+	const RE_VAR = '/^\w+(?:\[("|\')\w+\1\])?(?:\.(\w+))?$/';
+
 	/**
 	 * Number of currente line
 	 * @var integer
 	 */
 	protected $line = 0;
 
+	protected $nested = array();
+
+	protected $block = array();
+
 	function __construct() {
 
+	}
+
+	function addNested($val) {
+		$this->nested[] = $val;
+	}
+
+	function removeNested($val) {
+		$last = array_pop($this->nested);
+		if ($last != $val) {
+			throw $this->parseError("You closed $val and last opened was $last");
+		}
 	}
 
 	function parse($file) {
@@ -25,7 +42,6 @@ class Compiler {
 			$str .= preg_replace_callback(static::INTERPOLATE, array($this, 'callback'), $line);
 		}
 		file_put_contents('tmp/exec.php', $str);
-
 	}
 
 	function go($var) {
@@ -45,9 +61,8 @@ class Compiler {
 	}
 
 	function execution($val) {
-		$cut = explode(' ', $val);
-		var_dump($cut[0]);
-		var_dump($val);
+		$sent = new Sentence($val, $this);
+		return $sent->code();
 	}
 
 	function variable($val) {
@@ -57,5 +72,13 @@ class Compiler {
 			return "echo $var";
 		}
 		return "echo \$$var";
+	}
+
+	/**
+	 * Thow a parse Exception
+	 * @param string $str message for exception
+	 */
+	function parseError($str) {
+		return new ParseException($this->line, $str);
 	}
 }
