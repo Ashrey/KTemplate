@@ -6,8 +6,7 @@ class PrintNode extends Node{
 	const END_TOKEN = '}}';
 
 	function stack(){
-		$stack = parent::stack();
-		array_unshift($stack, new Token(Token::T_PRINT, 1));
-		return $stack;
+		parent::stack();
+		array_unshift($this->stack, new Token(Token::T_PRINT, 1, $this));
 	}
 }
