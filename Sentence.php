@@ -58,7 +58,7 @@ class Sentence {
 
 	function code_for() {
 		if (0 == preg_match(self::RE_FOR, $this->text, $match)) {
-			throw new ParseException($this->line, $str);
+			throw new ParseException($this->comp->getLine(), $str);
 		}
 		$this->comp->addNested('for');
 		if (!empty($match[2])) {

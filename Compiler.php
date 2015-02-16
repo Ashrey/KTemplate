@@ -123,4 +123,8 @@ class Compiler {
 	function setParent($name) {
 		$this->parent = $name;
 	}
+
+	function getLine(){
+		return $this->line ;
+	}
 }
