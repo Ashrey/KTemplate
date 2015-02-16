@@ -6,6 +6,13 @@ use KTemplate\Node\Node;
 use KTemplate\Parse;
 use KTemplate\Token;
 
+/**
+ * @method \Exception exception
+ * @method \Token nextIfIs
+ * @method \Token nextRequire
+ * 
+ */
+
 abstract class Generators {
 	/**
 	 * Parse Object
