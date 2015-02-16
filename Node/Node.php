@@ -100,7 +100,6 @@ abstract class Node {
 	 */
 	function end() {
 		if ($this->hasToken()) {
-			var_dump($this->stack);
 			$this->exception('Unexpected token');
 		}
 	}
