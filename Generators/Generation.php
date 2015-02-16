@@ -4,13 +4,27 @@ use \KTemplate\Compiler;
 
 class Generation {
 
+    /**
+     * Compiler object
+     * @var Compiler
+     */
 	protected $c;
 
+
+    /**
+     * Output object
+     * @var string
+     */
 	protected $output;
+
+    /**
+     * Id hash of class
+     * @var string
+     */
+    protected $id;
 
 	function __construct(Compiler $c, $out, $id) {
 		$this->c = $c;
-		$this->tpl = $c->getTpl();
 		$this->id = $id;
 		$this->output = new Output($out);
 	}
