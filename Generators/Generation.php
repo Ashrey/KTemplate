@@ -13,7 +13,7 @@ class Generation {
 
     /**
      * Output object
-     * @var string
+     * @var Output
      */
 	protected $output;
 
