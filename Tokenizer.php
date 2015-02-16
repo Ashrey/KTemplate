@@ -35,7 +35,7 @@ class Tokenizer{
             }
             $this->pos++;
         }
-        return false;
+        return NULL;
     }
 
 
