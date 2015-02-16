@@ -36,7 +36,7 @@ class Template {
 	}
 
 	function render($name, $var) {
-		list($id, $compilated) = $this->load($name, $var);
+		list($id, $compilated) = $this->load($name);
 		include $compilated;
 		$fun = "Tpl$id";
 		$fun::main($var);

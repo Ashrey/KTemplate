@@ -70,7 +70,6 @@ class Sentence {
 
 	function code_if() {
 		$this->comp->addNested('if');
-		$part = explode(' ', $this->text);
 		$node = new Node\ExecNode(substr($this->text, 3));
 		$part = $node->stack();
 		$text = '';
