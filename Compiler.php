@@ -87,13 +87,6 @@ class Compiler {
 		$node->stack();
 		$g = new PrintGenerator($node);
 		return '<?php echo '. $g->generate(). '; ?>';
-
-		$list = explode('|', $val);
-		$var = trim(array_shift($list));
-		if ($var[0] == '\'') {
-			return "<?php echo $var ?>";
-		}
-		return "<?php echo \$$var ?>";
 	}
 
 	/**
