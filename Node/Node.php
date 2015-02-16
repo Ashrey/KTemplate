@@ -110,6 +110,6 @@ abstract class Node {
 	 * @param string $str
 	 */
 	function exception($str) {
-		throw $this->parse->parseError($str);
+		throw new \Exception($str);
 	}
 }

@@ -1,5 +1,8 @@
 <?php
 namespace KTemplate;
+use KTemplate\Generators\PrintGenerator;
+use KTemplate\Node\PrintNode;
+
 class Compiler {
 	/**
 	 * Interpolation regular expression
@@ -80,6 +83,11 @@ class Compiler {
 	}
 
 	function variable($val) {
+		$node = new PrintNode($val);
+		$node->stack();
+		$g = new PrintGenerator($node);
+		return '<?php echo '. $g->generate(). '; ?>';
+
 		$list = explode('|', $val);
 		$var = trim(array_shift($list));
 		if ($var[0] == '\'') {
